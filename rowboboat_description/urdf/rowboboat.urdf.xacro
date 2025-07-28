@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot name="rowboboat" xmlns:xacro="http://ros.org/wiki/xacro">>
+    <xacro:include filename="$(find rowboboat_description)/urdf/piper_left.urdf.xacro" />
+    <xacro:include filename="$(find rowboboat_description)/urdf/piper_right.urdf.xacro" />
+
+    <link name="base_link">
+        <visual>
+            <geometry>
+                <mesh filename="package://rowboboat_description/meshes/RowBoBoatMount.stl" />
+            </geometry>
+            <material name="boat">
+                <color rgba="0.3 0.6 0.3 1" />
+            </material>
+        </visual>
+    </link>
+
+    <joint name="left_arm_joint" type="fixed">
+        <origin xyz="0 0.402577 0" rpy="0 0 1.5707" />
+        <parent link="base_link" />
+        <child link="left_base_link" />
+    </joint>
+
+    <joint name="right_arm_joint" type="fixed">
+        <origin xyz="0 -0.402577 0" rpy="0 0 -1.5707" />
+        <parent link="base_link" />
+        <child link="right_base_link" />
+    </joint>
+
+    <link name="left_paddle_link">
+        <visual>
+            <geometry>
+                <mesh filename="package://rowboboat_description/meshes/PaddleEOAT.stl" />
+            </geometry>
+            <material name="left_paddle">
+                <color rgba="0.4 0.4 0.75 1" />
+            </material>
+        </visual>
+    </link>
+
+    <link name="right_paddle_link">
+        <visual>
+            <geometry>
+                <mesh filename="package://rowboboat_description/meshes/PaddleEOAT.stl" />
+            </geometry>
+            <material name="right_paddle">
+                <color rgba="0.75 0.4 0.4 1" />
+            </material>
+        </visual>
+    </link>
+
+    <joint name="left_paddle_joint" type="fixed">
+        <origin xyz="0 0 0" rpy="0 -1.5707 0" />
+        <parent link="left_link6" />
+        <child link="left_paddle_link" />
+    </joint>
+
+    <joint name="right_paddle_joint" type="fixed">
+        <origin xyz="0 0 0" rpy="0 -1.5707 0" />
+        <parent link="right_link6" />
+        <child link="right_paddle_link" />
+    </joint>
+
+</robot>

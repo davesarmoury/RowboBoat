@@ -11,8 +11,8 @@ from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
 
 def generate_launch_description():
-    package_path = get_package_share_path('piper_description')
-    default_rviz_config_path = package_path / 'rviz/piper_no_gripper.rviz'
+    package_path = get_package_share_path('rowboboat_viz')
+    default_rviz_config_path = package_path / 'rviz/robot.rviz'
 
     rviz_arg = DeclareLaunchArgument(name='rvizconfig', default_value=str(default_rviz_config_path),
                                      description='Absolute path to rviz config file')

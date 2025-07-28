@@ -9,8 +9,8 @@ from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
 
 def generate_launch_description():
-    package_path = get_package_share_path('piper_description')
-    default_model_path = package_path / 'urdf/piper_no_gripper_description.urdf'
+    package_path = get_package_share_path('rowboboat_description')
+    default_model_path = package_path / 'urdf/rowboboat.urdf.xacro'
 
     model_arg = DeclareLaunchArgument(name='model', default_value=str(default_model_path),
                                       description='Absolute path to robot urdf file')
