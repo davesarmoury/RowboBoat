@@ -23,6 +23,9 @@ def generate_launch_description():
             'gripper_exist': 'false',
             'arm_name': 'left_',
         }],
+        remappings=[
+            ('joint_ctrl_single', '/joint_states')
+        ]
     )
 
     right_piper_node = Node(
@@ -37,6 +40,9 @@ def generate_launch_description():
             'gripper_exist': 'false',
             'arm_name': 'right_',
         }],
+        remappings=[
+            ('joint_ctrl_single', '/joint_states')
+        ]
     )
 
     # Return the LaunchDescription
