@@ -1,0 +1,9 @@
+<library path="rowboboat_control">
+  <class name="rowboboat_control/PaddleWheelHardware"
+         type="rowboboat_control::PaddleWheelHardware"
+         base_class_type="hardware_interface::ActuatorInterface">
+    <description>
+      RowBoBoat Paddle Wheel Interface
+    </description>
+  </class>
+</library>
