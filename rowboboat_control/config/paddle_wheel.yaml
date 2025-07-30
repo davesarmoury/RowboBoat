@@ -11,6 +11,9 @@ controller_manager:
     right_velocity_controller:
       type: forward_command_controller/ForwardCommandController
 
+    diff_drive_controller:
+      type: diff_drive_controller/DiffDriveController
+
 left_velocity_controller:
   ros__parameters:
     joints:
@@ -22,3 +25,26 @@ right_velocity_controller:
     joints:
       - right_bs_paddle_wheel
     interface_name: velocity
+
+diff_drive_controller:
+  ros__parameters:
+    left_wheel_names: ["left_bs_paddle_wheel"]
+    right_wheel_names: ["right_bs_paddle_wheel"]
+
+    wheel_separation: 1.0
+    wheel_radius: 0.5
+
+    wheel_separation_multiplier: 1.0
+    left_wheel_radius_multiplier: 1.0
+    right_wheel_radius_multiplier: 1.0
+
+    odom_frame_id: odom
+    base_frame_id: base_link
+
+    position_feedback: true
+    open_loop: true
+    enable_odom_tf: true
+
+    cmd_vel_timeout: 0.5 # seconds
+    publish_limited_velocity: true
+    velocity_rolling_window_size: 10

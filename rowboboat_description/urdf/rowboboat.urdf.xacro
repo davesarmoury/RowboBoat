@@ -65,15 +65,17 @@
     <link name="left_bs_paddle_wheel_link" />
     <link name="right_bs_paddle_wheel_link" />
 
-    <joint name="left_bs_paddle_wheel" type="fixed">
-        <origin xyz="0 0 0" rpy="0 -1.5707 0" />
-        <parent link="left_paddle_link" />
+    <joint name="left_bs_paddle_wheel" type="continuous">
+        <origin xyz="1 0 0" rpy="0 0 0" />
+        <axis xyz="1 0 0" />
+        <parent link="left_base_link" />
         <child link="left_bs_paddle_wheel_link" />
     </joint>
 
-    <joint name="right_bs_paddle_wheel" type="fixed">
-        <origin xyz="0 0 0" rpy="0 -1.5707 0" />
-        <parent link="right_paddle_link" />
+    <joint name="right_bs_paddle_wheel" type="continuous">
+        <origin xyz="1 0 0" rpy="0 0 0" />
+        <axis xyz="-1 0 0" />
+        <parent link="right_base_link" />
         <child link="right_bs_paddle_wheel_link" />
     </joint>
 </robot>

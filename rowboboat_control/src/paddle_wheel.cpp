@@ -19,7 +19,14 @@ hardware_interface::CallbackReturn PaddleWheelHardware::on_init(
   options.arguments({ "--ros-args", "-r", "__node:=PaddleWheelInternal"});
   node_ = rclcpp::Node::make_shared("_", options);
 
-  arm_publisher_ = node_->create_publisher<sensor_msgs::msg::JointState>("joint_ctrl_single", rclcpp::QoS(1));
+  arm_topic_ = info_.hardware_parameters["arm_topic"];
+  motion_radius_ = std::stof(info_.hardware_parameters["motion_radius"]);
+  center_z_ = std::stof(info_.hardware_parameters["center_z"]);
+  horizontal_spacing_ = std::stof(info_.hardware_parameters["horizontal_spacing"]);
+  min_height_ = std::stof(info_.hardware_parameters["min_height"]);
+  y_scale_ = std::stof(info_.hardware_parameters["y_scale"]);
+
+  arm_publisher_ = node_->create_publisher<sensor_msgs::msg::JointState>(arm_topic_, rclcpp::QoS(1));
 
   hw_commands_.resize(info_.joints.size(), std::numeric_limits<double>::quiet_NaN());
   hw_states_.resize(info_.joints.size(), std::numeric_limits<double>::quiet_NaN());
@@ -168,19 +175,24 @@ hardware_interface::return_type PaddleWheelHardware::read(
 }
 
 hardware_interface::return_type PaddleWheelHardware::write(
-  const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
+  const rclcpp::Time & /*time*/, const rclcpp::Duration &period)
 {
-  // BEGIN: This part here is for exemplary purposes - Please do not copy to your production code
-  std::stringstream ss;
-  ss << "Writing commands:";
+  std::vector<float> jangles;
 
-  for (uint i = 0; i < hw_commands_.size(); i++)
-  {
-    ss << std::fixed << std::setprecision(2) << std::endl
-       << "\t" << hw_commands_[i] << " for joint '" << info_.joints[i].name << "'";
+  float angle = angles_[0] + hw_commands_[0] * period.seconds();;
+
+  angles_[0] = angle;
+  hw_states_[0] = angles_[0];
+  return hardware_interface::return_type::OK;
+
+  if ( piper_ik(horizontal_spacing_, std::cos(angle), y_scale_ * std::sin(angle), &jangles) ){
+    angles_[0] = angle;
+    hw_states_[0] = angles_[0];
+    
+    return hardware_interface::return_type::OK;
   }
   
-  return hardware_interface::return_type::OK;
+  return hardware_interface::return_type::ERROR;
 }
 
 }  // namespace rowboboat_control

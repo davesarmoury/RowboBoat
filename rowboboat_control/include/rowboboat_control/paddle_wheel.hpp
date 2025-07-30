@@ -66,6 +66,13 @@ private:
   rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr arm_publisher_;
   rclcpp::Node::SharedPtr node_;
 
+  std::string arm_topic_;
+  float motion_radius_;
+  float center_z_;
+  float horizontal_spacing_;
+  float min_height_;
+  float y_scale_;
+
   std::vector<double> hw_commands_;
   std::vector<double> hw_states_;
   std::vector<double> angles_;

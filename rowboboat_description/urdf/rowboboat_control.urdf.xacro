@@ -3,10 +3,12 @@
     <ros2_control name="LeftPaddleWheel" type="actuator">
         <hardware>
             <plugin>rowboboat_control/PaddleWheelHardware</plugin>
-            <param name="arm_topic">"/left/joint_ctrl_single"</param>
+            <param name="arm_topic">/left/joint_ctrl_single</param>
             <param name="motion_radius">1.5</param>
             <param name="center_z">0.0</param>
+            <param name="horizontal_spacing">0.4</param>
             <param name="min_height">-0.5</param>
+            <param name="y_scale">1.0</param>
         </hardware>
         <joint name="left_bs_paddle_wheel">
             <command_interface name="velocity">
@@ -19,10 +21,12 @@
     <ros2_control name="RightPaddleWheel" type="actuator">
         <hardware>
             <plugin>rowboboat_control/PaddleWheelHardware</plugin>
-            <param name="arm_topic">"/right/joint_ctrl_single"</param>
+            <param name="arm_topic">/right/joint_ctrl_single</param>
             <param name="motion_radius">1.5</param>
             <param name="center_z">0.0</param>
+            <param name="horizontal_spacing">0.4</param>
             <param name="min_height">-0.5</param>
+            <param name="y_scale">-1.0</param>
         </hardware>
         <joint name="right_bs_paddle_wheel">
             <command_interface name="velocity">

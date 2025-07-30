@@ -47,11 +47,19 @@ def generate_launch_description():
         arguments=["right_velocity_controller", "--controller-manager", "/controller_manager"],
     )
 
+    diff_drive_controller_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        name='diff_drive_controller_spawner',
+        arguments=["diff_drive_controller", "--controller-manager", "/controller_manager"],
+    )
+
     nodes = [        
         control_node,
         joint_state_broadcaster_spawner,
-        left_controller_spawner,
-        right_controller_spawner,
+        diff_drive_controller_spawner,
+#        left_controller_spawner,
+#        right_controller_spawner,
     ]
 
     return LaunchDescription(nodes)
