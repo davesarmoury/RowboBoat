@@ -12,7 +12,7 @@ hardware_interface::CallbackReturn PaddleWheelHardware::on_init(
     return hardware_interface::CallbackReturn::ERROR;
   }
   logger_ = std::make_shared<rclcpp::Logger>(
-    rclcpp::get_logger("controller_manager.resource_manager.hardware_component.system.PaddleWheel"));
+    rclcpp::get_logger("controller_manager.resource_manager.hardware_component.actuator.PaddleWheel"));
   clock_ = std::make_shared<rclcpp::Clock>(rclcpp::Clock());
 
   rclcpp::NodeOptions options;
@@ -22,6 +22,8 @@ hardware_interface::CallbackReturn PaddleWheelHardware::on_init(
   arm_publisher_ = node_->create_publisher<sensor_msgs::msg::JointState>("joint_ctrl_single", rclcpp::QoS(1));
 
   hw_commands_.resize(info_.joints.size(), std::numeric_limits<double>::quiet_NaN());
+  hw_states_.resize(info_.joints.size(), std::numeric_limits<double>::quiet_NaN());
+  angles_.resize(info_.joints.size(), std::numeric_limits<double>::quiet_NaN());
 
   for (const hardware_interface::ComponentInfo & joint : info_.joints)
   {
@@ -34,12 +36,12 @@ hardware_interface::CallbackReturn PaddleWheelHardware::on_init(
       return hardware_interface::CallbackReturn::ERROR;
     }
 
-    if (joint.command_interfaces[0].name != hardware_interface::HW_IF_POSITION)
+    if (joint.command_interfaces[0].name != hardware_interface::HW_IF_VELOCITY)
     {
       RCLCPP_FATAL(
         get_logger(), "Joint '%s' have %s command interfaces found. '%s' expected.",
         joint.name.c_str(), joint.command_interfaces[0].name.c_str(),
-        hardware_interface::HW_IF_POSITION);
+        hardware_interface::HW_IF_VELOCITY);
       return hardware_interface::CallbackReturn::ERROR;
     }
 
@@ -94,12 +96,7 @@ hardware_interface::CallbackReturn PaddleWheelHardware::on_configure(
   {
     hw_commands_[i] = 0;
     hw_states_[i] = 0;
-  }
-
-  for (uint i = 0; i < hw_states_.size(); i++)
-  {
-    
-    hw_commands_[i] = 0;
+    angles_[i] = 0;
   }
 
   RCLCPP_INFO(get_logger(), "Successfully configured!");
@@ -129,7 +126,7 @@ PaddleWheelHardware::export_command_interfaces()
   {
     command_interfaces.emplace_back(
       hardware_interface::CommandInterface(
-        info_.joints[i].name, hardware_interface::HW_IF_POSITION, &hw_commands_[i]));
+        info_.joints[i].name, hardware_interface::HW_IF_VELOCITY, &hw_commands_[i]));
   }
 
   return command_interfaces;

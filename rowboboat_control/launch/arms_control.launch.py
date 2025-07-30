@@ -29,18 +29,21 @@ def generate_launch_description():
     joint_state_broadcaster_spawner = Node(
         package="controller_manager",
         executable="spawner",
+        name='joint_state_broadcaster_spawner',
         arguments=["joint_state_broadcaster", "--controller-manager", "/controller_manager"],
     )
 
     left_controller_spawner = Node(
         package="controller_manager",
         executable="spawner",
+        name='left_controller_spawner',
         arguments=["left_velocity_controller", "--controller-manager", "/controller_manager"],
     )
 
     right_controller_spawner = Node(
         package="controller_manager",
         executable="spawner",
+        name='right_controller_spawner',
         arguments=["right_velocity_controller", "--controller-manager", "/controller_manager"],
     )
 

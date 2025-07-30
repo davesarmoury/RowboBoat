@@ -6,10 +6,10 @@ controller_manager:
       type: joint_state_broadcaster/JointStateBroadcaster
 
     left_velocity_controller:
-      type: rowboboat_control/PaddleWheelHardware
+      type: forward_command_controller/ForwardCommandController
 
     right_velocity_controller:
-      type: rowboboat_control/PaddleWheelHardware
+      type: forward_command_controller/ForwardCommandController
 
 left_velocity_controller:
   ros__parameters:

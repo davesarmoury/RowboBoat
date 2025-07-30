@@ -1,34 +1,35 @@
-<robot name="rowboboat_control" >
-  <ros2_control name="LeftPaddleWheel" type="system">
-    <hardware>
-      <plugin>rowboboat_control/PaddleWheelHardware</plugin>
-      <param name="arm_topic">"/left/joint_ctrl_single"</param>
-      <param name="motion_radius">1.5</param>
-      <param name="center_z">0.0</param>
-      <param name="min_height">-0.5</param>
-    </hardware>
-    <joint name="left_bs_paddle_wheel">
-      <command_interface name="velocity">
-        <param name="min">-3</param>
-        <param name="max">3</param>
-      </command_interface>
-      <state_interface name="position"/>
-    </joint>
-  </ros2_control>
-  <ros2_control name="RightPaddleWheel" type="system">
-    <hardware>
-      <plugin>rowboboat_control/PaddleWheelHardware</plugin>
-      <param name="arm_topic">"/right/joint_ctrl_single"</param>
-      <param name="motion_radius">1.5</param>
-      <param name="center_z">0.0</param>
-      <param name="min_height">-0.5</param>
-    </hardware>
-    <joint name="right_bs_paddle_wheel">
-      <command_interface name="velocity">
-        <param name="min">-3</param>
-        <param name="max">3</param>
-      </command_interface>
-      <state_interface name="position"/>
-    </joint>
-  </ros2_control>
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <ros2_control name="LeftPaddleWheel" type="actuator">
+        <hardware>
+            <plugin>rowboboat_control/PaddleWheelHardware</plugin>
+            <param name="arm_topic">"/left/joint_ctrl_single"</param>
+            <param name="motion_radius">1.5</param>
+            <param name="center_z">0.0</param>
+            <param name="min_height">-0.5</param>
+        </hardware>
+        <joint name="left_bs_paddle_wheel">
+            <command_interface name="velocity">
+                <param name="min">-3</param>
+                <param name="max">3</param>
+            </command_interface>
+            <state_interface name="position"/>
+        </joint>
+    </ros2_control>
+    <ros2_control name="RightPaddleWheel" type="actuator">
+        <hardware>
+            <plugin>rowboboat_control/PaddleWheelHardware</plugin>
+            <param name="arm_topic">"/right/joint_ctrl_single"</param>
+            <param name="motion_radius">1.5</param>
+            <param name="center_z">0.0</param>
+            <param name="min_height">-0.5</param>
+        </hardware>
+        <joint name="right_bs_paddle_wheel">
+            <command_interface name="velocity">
+                <param name="min">-3</param>
+                <param name="max">3</param>
+            </command_interface>
+            <state_interface name="position"/>
+        </joint>
+    </ros2_control>
 </robot>
