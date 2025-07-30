@@ -3,6 +3,8 @@
     <xacro:include filename="$(find rowboboat_description)/urdf/piper_left.urdf.xacro" />
     <xacro:include filename="$(find rowboboat_description)/urdf/piper_right.urdf.xacro" />
 
+    <xacro:include filename="$(find rowboboat_description)/urdf/rowboboat_control.urdf.xacro" />
+
     <link name="base_link">
         <visual>
             <geometry>
@@ -60,4 +62,18 @@
         <child link="right_paddle_link" />
     </joint>
 
+    <link name="left_bs_paddle_wheel_link" />
+    <link name="right_bs_paddle_wheel_link" />
+
+    <joint name="left_bs_paddle_wheel" type="fixed">
+        <origin xyz="0 0 0" rpy="0 -1.5707 0" />
+        <parent link="left_paddle_link" />
+        <child link="left_bs_paddle_wheel_link" />
+    </joint>
+
+    <joint name="right_bs_paddle_wheel" type="fixed">
+        <origin xyz="0 0 0" rpy="0 -1.5707 0" />
+        <parent link="right_paddle_link" />
+        <child link="right_bs_paddle_wheel_link" />
+    </joint>
 </robot>

@@ -1,0 +1,24 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 10  # Hz
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    left_velocity_controller:
+      type: rowboboat_control/PaddleWheelHardware
+
+    right_velocity_controller:
+      type: rowboboat_control/PaddleWheelHardware
+
+left_velocity_controller:
+  ros__parameters:
+    joints:
+      - left_bs_paddle_wheel
+    interface_name: velocity
+
+right_velocity_controller:
+  ros__parameters:
+    joints:
+      - right_bs_paddle_wheel
+    interface_name: velocity

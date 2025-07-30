@@ -32,6 +32,7 @@ ament_target_dependencies(
   pluginlib
   rclcpp
   rclcpp_lifecycle
+  sensor_msgs
 )
 
 # Export hardware plugins
@@ -62,5 +63,13 @@ ament_export_dependencies(
   pluginlib
   rclcpp
   rclcpp_lifecycle
+  sensor_msgs
 )
+
+install(DIRECTORY
+  launch
+  config
+  DESTINATION share/${PROJECT_NAME}/
+)
+
 ament_package()

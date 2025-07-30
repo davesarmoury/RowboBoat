@@ -18,7 +18,7 @@ def generate_launch_description():
         output='screen',
         namespace="left",
         parameters=[{
-            'can_port': 'can0',
+            'can_port': 'can_left',
             'auto_enable': LaunchConfiguration('auto_enable'),
             'gripper_exist': 'false',
             'arm_name': 'left_',
@@ -35,7 +35,7 @@ def generate_launch_description():
         output='screen',
         namespace="right",
         parameters=[{
-            'can_port': 'can1',
+            'can_port': 'can_right',
             'auto_enable': LaunchConfiguration('auto_enable'),
             'gripper_exist': 'false',
             'arm_name': 'right_',

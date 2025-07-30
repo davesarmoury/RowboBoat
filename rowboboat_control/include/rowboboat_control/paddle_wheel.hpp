@@ -22,6 +22,7 @@
 #include "rclcpp_lifecycle/state.hpp"
 #include "hardware_interface/types/hardware_interface_type_values.hpp"
 #include "rclcpp/rclcpp.hpp"
+#include <sensor_msgs/msg/joint_state.hpp>
 
 namespace rowboboat_control
 {
@@ -55,14 +56,19 @@ public:
   rclcpp::Logger get_logger() const { return *logger_; }
 
   rclcpp::Clock::SharedPtr get_clock() const { return clock_; }
+  
+  bool piper_ik(float x, float y, float z, std::vector<float> *result);
 
 private:
   // Objects for logging
   std::shared_ptr<rclcpp::Logger> logger_;
   rclcpp::Clock::SharedPtr clock_;
+  rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr arm_publisher_;
+  rclcpp::Node::SharedPtr node_;
 
-  // Store the command for the simulated robot
   std::vector<double> hw_commands_;
+  std::vector<double> hw_states_;
+  std::vector<double> angles_;
 };
 
 }  // namespace rowboboat_control
