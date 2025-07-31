@@ -23,6 +23,7 @@
 #include "hardware_interface/types/hardware_interface_type_values.hpp"
 #include "rclcpp/rclcpp.hpp"
 #include <sensor_msgs/msg/joint_state.hpp>
+#include <geometry_msgs/msg/pose_stamped.hpp>
 
 namespace rowboboat_control
 {
@@ -57,21 +58,24 @@ public:
 
   rclcpp::Clock::SharedPtr get_clock() const { return clock_; }
   
-  bool piper_ik(float x, float y, float z, std::vector<float> *result);
+  bool piper_ik(double x, double y, double z, std::vector<double> &result);
+  void paddle_motion(double &z, double motion_floor);
 
 private:
   // Objects for logging
   std::shared_ptr<rclcpp::Logger> logger_;
   rclcpp::Clock::SharedPtr clock_;
   rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr arm_publisher_;
+  rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr point_publisher_;
   rclcpp::Node::SharedPtr node_;
 
   std::string arm_topic_;
-  float motion_radius_;
-  float center_z_;
-  float horizontal_spacing_;
-  float min_height_;
-  float y_scale_;
+  std::string arm_name_;
+  double motion_radius_;
+  double center_z_;
+  double center_x_;
+  double z_clamp_;
+  double y_scale_;
 
   std::vector<double> hw_commands_;
   std::vector<double> hw_states_;

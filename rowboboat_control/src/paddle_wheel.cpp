@@ -20,13 +20,15 @@ hardware_interface::CallbackReturn PaddleWheelHardware::on_init(
   node_ = rclcpp::Node::make_shared("_", options);
 
   arm_topic_ = info_.hardware_parameters["arm_topic"];
-  motion_radius_ = std::stof(info_.hardware_parameters["motion_radius"]);
-  center_z_ = std::stof(info_.hardware_parameters["center_z"]);
-  horizontal_spacing_ = std::stof(info_.hardware_parameters["horizontal_spacing"]);
-  min_height_ = std::stof(info_.hardware_parameters["min_height"]);
-  y_scale_ = std::stof(info_.hardware_parameters["y_scale"]);
+  arm_name_ = info_.hardware_parameters["arm_name"];
+  motion_radius_ = std::stod(info_.hardware_parameters["motion_radius"]);
+  center_z_ = std::stod(info_.hardware_parameters["center_z"]);
+  center_x_ = std::stod(info_.hardware_parameters["center_x"]);
+  z_clamp_ = std::stod(info_.hardware_parameters["z_clamp"]);
+  y_scale_ = std::stod(info_.hardware_parameters["y_scale"]);
 
   arm_publisher_ = node_->create_publisher<sensor_msgs::msg::JointState>(arm_topic_, rclcpp::QoS(1));
+  point_publisher_ = node_->create_publisher<geometry_msgs::msg::PoseStamped>("paddle_point", rclcpp::QoS(1));
 
   hw_commands_.resize(info_.joints.size(), std::numeric_limits<double>::quiet_NaN());
   hw_states_.resize(info_.joints.size(), std::numeric_limits<double>::quiet_NaN());
@@ -70,29 +72,6 @@ hardware_interface::CallbackReturn PaddleWheelHardware::on_init(
   }
 
   return hardware_interface::CallbackReturn::SUCCESS;
-}
-
-bool PaddleWheelHardware::piper_ik(float x, float y, float z, std::vector<float> *result){
-    result = new std::vector<float>;
-    float L1 = 0.28505;
-    float L2 = 0.25065;
-    float L3 = std::sqrt(x * x + y * y + z * z);
-
-    float j1 = std::atan2(y, x);
-    float j2 = 3.14159 - std::acos((L1*L1 + L3*L3 - L2*L2) / (2 * L1 * L3));
-    float j3 = -std::acos((L1*L1 + L2*L2 - L3*L3) / (2 * L1 * L2));
-    float j4 = 0.0;
-    float j5 = 0.0;
-    float j6 = 0.0;
-
-    result->push_back(j1);
-    result->push_back(j2);
-    result->push_back(j3);
-    result->push_back(j4);
-    result->push_back(j5);
-    result->push_back(j6);
-
-    return true;
 }
 
 hardware_interface::CallbackReturn PaddleWheelHardware::on_configure(
@@ -174,26 +153,79 @@ hardware_interface::return_type PaddleWheelHardware::read(
   return hardware_interface::return_type::OK;
 }
 
+void PaddleWheelHardware::paddle_motion(double &z, double z_clamp){
+  z = std::max(z_clamp * -1, z);
+  z = std::min(z_clamp, z);
+  return;
+}
+
+bool PaddleWheelHardware::piper_ik(double x, double y, double z, std::vector<double> &result){
+    double L1 = 0.28505;
+    double L2 = 0.25065;
+    double L3 = std::sqrt(x * x + y * y + z * z);
+
+    double j1 = std::atan2(y, x);
+    double j2 = 3.14159 - std::acos((L1*L1 + L3*L3 - L2*L2) / (2 * L1 * L3)) - std::asin(z/L3);
+    double j3 = -std::acos((L1*L1 + L2*L2 - L3*L3) / (2 * L1 * L2));
+    double j4 = j1;
+    double j5 = -j3 - j2;
+    double j6 = -j1 * 0.5;
+
+    result.push_back(j1);
+    result.push_back(j2);
+    result.push_back(j3);
+    result.push_back(j4);
+    result.push_back(j5);
+    result.push_back(j6);
+
+    return true;
+}
+
 hardware_interface::return_type PaddleWheelHardware::write(
-  const rclcpp::Time & /*time*/, const rclcpp::Duration &period)
-{
-  std::vector<float> jangles;
+  const rclcpp::Time &time, const rclcpp::Duration &period)
+  {
+    double angle = angles_[0] + hw_commands_[0] * period.seconds();;
 
-  float angle = angles_[0] + hw_commands_[0] * period.seconds();;
-
-  angles_[0] = angle;
-  hw_states_[0] = angles_[0];
-  return hardware_interface::return_type::OK;
-
-  if ( piper_ik(horizontal_spacing_, std::cos(angle), y_scale_ * std::sin(angle), &jangles) ){
     angles_[0] = angle;
     hw_states_[0] = angles_[0];
     
-    return hardware_interface::return_type::OK;
+    // Calculate circular motion
+    double x = center_x_;
+    double y = y_scale_ * std::sin(angle) * motion_radius_ * (-1);
+    double z = std::cos(angle) * motion_radius_;
+
+    // Clamp flat motion to bottom of motion
+    paddle_motion(z, z_clamp_);
+
+    // Shift motion up/down
+    z = z + center_z_;
+
+    geometry_msgs::msg::PoseStamped msg = geometry_msgs::msg::PoseStamped();
+    msg.header.stamp = time;
+    msg.header.frame_id = arm_name_ + "base_link";
+    msg.pose.position.x = x;
+    msg.pose.position.y = y;
+    msg.pose.position.z = z + 0.123;
+    msg.pose.orientation.w = 1;
+    this->point_publisher_->publish(msg);
+
+    std::vector<double> jangles;
+
+    if ( piper_ik(x, y, z, jangles) ){
+      sensor_msgs::msg::JointState msg = sensor_msgs::msg::JointState();
+      msg.header.stamp = time;
+      
+      std::vector<std::string> joint_names_ = {arm_name_ + "joint1", arm_name_ + "joint2", arm_name_ + "joint3", arm_name_ + "joint4", arm_name_ + "joint5", arm_name_ + "joint6"};
+      msg.name = joint_names_;
+      
+      msg.position = jangles;
+      arm_publisher_->publish(msg);
+
+      return hardware_interface::return_type::OK;
+    }
+    
+    return hardware_interface::return_type::ERROR;
   }
-  
-  return hardware_interface::return_type::ERROR;
-}
 
 }  // namespace rowboboat_control
 
