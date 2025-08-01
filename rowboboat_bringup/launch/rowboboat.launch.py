@@ -16,9 +16,14 @@ def generate_launch_description():
         PathJoinSubstitution([PathJoinSubstitution([FindPackageShare('rowboboat_control'), 'launch']), 'arms_control.launch.py'])
     )
 
+    viz_launch = IncludeLaunchDescription(
+        PathJoinSubstitution([PathJoinSubstitution([FindPackageShare('rowboboat_viz'), 'launch']), 'view_robot.launch.py'])
+    )
+
     # Return the LaunchDescription
     return LaunchDescription([
         desc_launch,
         arms_launch,
-        control_launch
+        control_launch,
+        viz_launch
     ])

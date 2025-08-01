@@ -6,8 +6,8 @@
             <param name="arm_topic">/left/joint_ctrl_single</param>
             <param name="arm_name">left_</param>
             <param name="motion_radius">0.3</param>
-            <param name="center_z">0.0</param>
-            <param name="center_x">0.2</param>
+            <param name="center_z">0.123</param>
+            <param name="center_x">0.30.</param>
             <param name="z_clamp">0.2</param>
             <param name="y_scale">1.0</param>
         </hardware>
@@ -25,8 +25,8 @@
             <param name="arm_topic">/right/joint_ctrl_single</param>
             <param name="arm_name">right_</param>
             <param name="motion_radius">0.3</param>
-            <param name="center_z">0.0</param>
-            <param name="center_x">0.2</param>
+            <param name="center_z">0.123</param>
+            <param name="center_x">0.3</param>
             <param name="z_clamp">0.2</param>
             <param name="y_scale">-1.0</param>
         </hardware>
