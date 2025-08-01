@@ -16,6 +16,10 @@ def generate_launch_description():
         PathJoinSubstitution([PathJoinSubstitution([FindPackageShare('rowboboat_control'), 'launch']), 'arms_control.launch.py'])
     )
 
+    teleop_launch = IncludeLaunchDescription(
+        PathJoinSubstitution([PathJoinSubstitution([FindPackageShare('rowboboat_bringup'), 'launch']), 'teleop.launch.py'])
+    )
+
     viz_launch = IncludeLaunchDescription(
         PathJoinSubstitution([PathJoinSubstitution([FindPackageShare('rowboboat_viz'), 'launch']), 'view_robot.launch.py'])
     )
@@ -25,5 +29,6 @@ def generate_launch_description():
         desc_launch,
         arms_launch,
         control_launch,
+        teleop_launch,
         viz_launch
     ])
