@@ -62,18 +62,30 @@
         <child link="right_paddle_link" />
     </joint>
 
-    <link name="left_bs_paddle_wheel_link" />
-    <link name="right_bs_paddle_wheel_link" />
+    <link name="left_bs_paddle_wheel_link">
+        <visual>
+            <geometry>
+                <mesh filename="package://rowboboat_description/meshes/Tire.fbx" scale="0.01 0.01 0.01" />
+            </geometry>
+        </visual>
+    </link>
+    <link name="right_bs_paddle_wheel_link">
+        <visual>
+            <geometry>
+                <mesh filename="package://rowboboat_description/meshes/Tire.fbx" scale="0.01 0.01 0.01" />
+            </geometry>
+        </visual>
+    </link>
 
     <joint name="left_bs_paddle_wheel" type="continuous">
-        <origin xyz="1 0 0" rpy="0 0 0" />
+        <origin xyz="0.25 0 0" rpy="0 0 0" />
         <axis xyz="1 0 0" />
         <parent link="left_base_link" />
         <child link="left_bs_paddle_wheel_link" />
     </joint>
 
     <joint name="right_bs_paddle_wheel" type="continuous">
-        <origin xyz="1 0 0" rpy="0 0 0" />
+        <origin xyz="0.25 0 0" rpy="0 0 0" />
         <axis xyz="-1 0 0" />
         <parent link="right_base_link" />
         <child link="right_bs_paddle_wheel_link" />
