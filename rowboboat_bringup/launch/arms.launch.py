@@ -5,12 +5,6 @@ from launch.substitutions import LaunchConfiguration
 
 
 def generate_launch_description():
-    auto_enable_arg = DeclareLaunchArgument(
-        'auto_enable',
-        default_value='true',
-        description='Automatically enable the Piper node.'
-    )
-
     left_piper_node = Node(
         package='piper',
         executable='piper_single_ctrl',
@@ -18,13 +12,13 @@ def generate_launch_description():
         output='screen',
         namespace="left",
         parameters=[{
-            'can_port': 'can_left',
-            'auto_enable': LaunchConfiguration('auto_enable'),
-            'gripper_exist': 'false',
+            'can_port': 'arm_left',
+            'auto_enable': True,
+            'gripper_exist': False,
             'arm_name': 'left_',
         }],
         remappings=[
-            ('joint_ctrl_single', '/joint_states')
+            ('joint_states_single', '/joint_states')
         ]
     )
 
@@ -35,13 +29,13 @@ def generate_launch_description():
         output='screen',
         namespace="right",
         parameters=[{
-            'can_port': 'can_right',
-            'auto_enable': LaunchConfiguration('auto_enable'),
-            'gripper_exist': 'false',
+            'can_port': 'arm_right',
+            'auto_enable': True,
+            'gripper_exist': False,
             'arm_name': 'right_',
         }],
         remappings=[
-            ('joint_ctrl_single', '/joint_states')
+            ('joint_states_single', '/joint_states')
         ]
     )
 
