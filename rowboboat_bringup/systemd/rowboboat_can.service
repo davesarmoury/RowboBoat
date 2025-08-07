@@ -1,0 +1,10 @@
+[Unit]
+Description=Auto Initialize USB CAN modules
+
+[Service]
+ExecStart=/usr/local/bin/rowboboat_can_activate.sh --ignore
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+
