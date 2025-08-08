@@ -1,0 +1,11 @@
+[Unit]
+Description="Row Row RoBo Boat!"
+After=network.target
+
+[Service]
+Type=simple
+User=davesarmoury
+ExecStart=/usr/local/bin/rowboboat.sh
+
+[Install]
+WantedBy=multi-user.target
