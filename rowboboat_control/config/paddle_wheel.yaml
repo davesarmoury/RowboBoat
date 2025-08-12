@@ -31,8 +31,8 @@ diff_drive_controller:
     left_wheel_names: ["left_bs_paddle_wheel"]
     right_wheel_names: ["right_bs_paddle_wheel"]
 
-    wheel_separation: 1.0
-    wheel_radius: 0.5
+    wheel_separation: 0.5
+    wheel_radius: 0.42
 
     wheel_separation_multiplier: 1.0
     left_wheel_radius_multiplier: 1.0

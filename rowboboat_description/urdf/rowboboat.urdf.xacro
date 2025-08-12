@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<robot name="rowboboat" xmlns:xacro="http://ros.org/wiki/xacro">>
+<robot name="rowboboat" xmlns:xacro="http://ros.org/wiki/xacro">
     <xacro:include filename="$(find rowboboat_description)/urdf/piper_left.urdf.xacro" />
     <xacro:include filename="$(find rowboboat_description)/urdf/piper_right.urdf.xacro" />
 
     <xacro:include filename="$(find rowboboat_description)/urdf/rowboboat_control.urdf.xacro" />
 
-    <link name="base_link">
+    <link name="base_link" />
+
+    <joint name="tire_base_joint" type="fixed">
+        <origin xyz="0 0 0.418129" rpy="0 0 0" />
+        <parent link="base_link" />
+        <child link="canoe_link" />
+    </joint>
+
+    <link name="canoe_link">
         <visual>
             <geometry>
                 <mesh filename="package://rowboboat_description/meshes/RowBoBoatMount.stl" />
@@ -18,13 +26,13 @@
 
     <joint name="left_arm_joint" type="fixed">
         <origin xyz="0 0.402577 0" rpy="0 0 1.5707" />
-        <parent link="base_link" />
+        <parent link="canoe_link" />
         <child link="left_base_link" />
     </joint>
 
     <joint name="right_arm_joint" type="fixed">
         <origin xyz="0 -0.402577 0" rpy="0 0 -1.5707" />
-        <parent link="base_link" />
+        <parent link="canoe_link" />
         <child link="right_base_link" />
     </joint>
 
